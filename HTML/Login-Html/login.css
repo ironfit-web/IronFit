@@ -30,7 +30,23 @@ form {
   gap: 20px;
 }
 
-/* العنوان */
+/* ===== دخول تدريجي متسلسل ===== */
+form h1,
+form label,
+form input,
+form button {
+  opacity: 0;
+  transform: translateY(25px);
+  animation: fadeSlideUp 0.7s ease-out forwards;
+}
+
+/* ترتيب الدخول */
+form h1 { animation-delay: 0.1s; }
+form label { animation-delay: 0.3s; }
+form input { animation-delay: 0.5s; }
+form button { animation-delay: 0.7s; }
+
+/* ===== العنوان ===== */
 form h1 {
   font-size: 1.8em;
   font-weight: 700;
@@ -71,10 +87,24 @@ form button {
   font-size: 1.1em;
   font-weight: 700;
   cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 form button:hover {
   background-color: #cc0000;
+  transform: translateY(-2px);
+}
+
+/* ===== Animation ===== */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ===== Responsive ===== */

@@ -9,9 +9,13 @@
 <body>
 
 <!-- الشريط الجانبي -->
-<div id="sidebar" class="sidebar">
+ <div id="sidebar" class="sidebar">
   <button onclick="window.location.href='../Login-Html/login.html'" class="login-btn">تسجيل الدخول</button>
+  <button onclick="window.location.href='help.html'" class="help">
+    المساعدة ودعم
+  </button>
 </div>
+
 
 <!-- الجزء العلوي -->
 <header>
@@ -98,6 +102,8 @@ async function fetchProducts() {
   }
 }
 
+// ... (بقية الكود الخاص بك في الأعلى) ...
+
 function renderProducts(list) {
   let filtered = list;
   if(activeCategory) filtered = filtered.filter(p => String(p.category_id) === activeCategory);
@@ -106,11 +112,14 @@ function renderProducts(list) {
 
   productsGrid.innerHTML = '';
   if(!filtered.length) {
-    productsGrid.innerHTML = '<div>لا توجد منتجات حالياً</div>';
+    productsGrid.innerHTML = '<div>لا توجد منتجات حاليًا</div>';
     return;
   }
 
-  filtered.forEach(p => {
+  // استخدام متغير لتحديد التأخير الزمني لكل بطاقة
+  let delay = 0.1; // يبدأ التأخير من 0.1 ثانية
+
+  filtered.forEach((p, index) => {
     const card = document.createElement('div');
     card.className = 'card';
     const imgSrc = (p.image && p.image !== 'null') ? p.image : 'https://via.placeholder.com/400x300?text=No+Image';
@@ -129,9 +138,17 @@ function renderProducts(list) {
       window.location.href = `product.html?id=${p.id}`;
     });
 
+    // 👈 [الإضافة الجديدة 1] تعيين خاصية CSS مخصصة للتأخير 
+    // يتم حساب التأخير المتزايد (0.1s, 0.2s, 0.3s, وهكذا)
+    card.style.setProperty('--animation-delay', `${delay * (index + 1)}s`);
+    // يمكن استخدام طريقة أبسط:
+    // card.style.animationDelay = `${delay * (index + 1)}s`; 
+
     productsGrid.appendChild(card);
   });
 }
+
+// ... (بقية الكود الخاص بك في الأسفل) ...
 
 searchInput.addEventListener('input', () => renderProducts(PRODUCTS));
 
