@@ -56,7 +56,8 @@ db.serialize(() => {
       image TEXT,             -- صورة المنتج (رابط أو مسار)
       name TEXT NOT NULL,     -- اسم المنتج
       description TEXT,       -- وصف المنتج
-      price REAL NOT NULL     -- سعر المنتج
+      price REAL NOT NULL,    -- سعر المنتج
+      category_id INTEGER     -- معرف التصنيف (اختياري)
     )
   `, (err) => {
     if (err) {
@@ -67,8 +68,7 @@ db.serialize(() => {
   });
 });
 
-
-// إضافة في db.js
+// إنشاء جدول التصنيفات إذا ماكانش موجود
 db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS categories (
@@ -79,26 +79,15 @@ db.serialize(() => {
     if (err) console.error('خطأ في إنشاء جدول التصنيفات:', err.message);
     else console.log('✅ تم التأكد من وجود جدول التصنيفات');
   });
-
-  // إضافة عمود category_id للمنتجات
-  db.run(`
-    ALTER TABLE products
-    ADD COLUMN category_id INTEGER
-  `, [], (err) => {
-    if (err && !err.message.includes('duplicate column name')) console.error('خطأ إضافة عمود التصنيف:', err.message);
-    else console.log('✅ تم التأكد من وجود عمود التصنيف في المنتجات');
-  });
 });
 
-
-// إنشاء جدول الطلبات إذا ماكانش موجود
+// إنشاء جدول الطلبات إذا ماكانش موجود (بلا إيميل)
 db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS orders (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       product_id INTEGER NOT NULL,
       customer_name TEXT NOT NULL,
-      customer_email TEXT NOT NULL,
       customer_phone TEXT NOT NULL,
       customer_address TEXT NOT NULL,
       quantity INTEGER NOT NULL DEFAULT 1,
@@ -112,9 +101,10 @@ db.serialize(() => {
     if (err) {
       console.error('خطأ في إنشاء جدول الطلبات:', err.message);
     } else {
-      console.log('✅ تم التأكد من وجود جدول الطلبات');
+      console.log('✅ تم التأكد من وجود جدول الطلبات (بلا إيميل)');
     }
   });
 });
 
 module.exports = db;
+
